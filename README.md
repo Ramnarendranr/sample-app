@@ -60,14 +60,16 @@ ssh -i /path/to/your-key.pem ec2-user@your-instance-public-ip
 
 **Install Jenkins:**
 
-```sudo apt-get update
-sudo apt-get install jenkins -y```
+```sudo apt-get update```
+```sudo apt-get install jenkins -y```
 
 **Start and enable Jenkins service:**
 
-```sudo systemctl start jenkins
+```
+sudo systemctl start jenkins
 sudo systemctl enable jenkins
-sudo systemctl status jenkins```
+sudo systemctl status jenkins
+```
 
 **Retrieve the Jenkins initial admin password:**
 
@@ -75,13 +77,15 @@ sudo systemctl status jenkins```
 
 **Install Maven:**
 
-```cd /opt/
+```
+cd /opt/
 wget https://dlcdn.apache.org/maven/maven-3/3.9.7/binaries/apache-maven-3.9.7-bin.tar.gz
 tar -xvzf apache-maven-3.9.7-bin.tar.gz
 mv apache-maven-3.9.7/ maven-3.9
 export PATH=$PATH:/opt/maven-3.9/bin
 mvn -version
-vi ~/.bashrc```
+vi ~/.bashrc
+```
 
 **Add the following line at the end of the ~/.bashrc file to make the Maven path permanent:**
 
@@ -89,8 +93,10 @@ vi ~/.bashrc```
 
 **Source the .bashrc file and verify Maven installation:**
 
-```source ~/.bashrc
-mvn --version```
+```
+source ~/.bashrc
+mvn --version
+```
 
 ### Configuring SonarQube Server
 
@@ -101,30 +107,40 @@ mvn --version```
 
 **Update the package lists and install Java:**
 
-```sudo apt update
-sudo apt install openjdk-11-jre-headless -y```
+```
+sudo apt update
+sudo apt install openjdk-11-jre-headless -y
+```
 
 **Install SonarQube:**
 
-```cd /opt/
+```
+cd /opt/
 wget https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-8.9.10.61524.zip
 sudo apt install unzip
 unzip sonarqube-8.9.10.61524.zip
 mv sonarqube-8.9.10.61524/ sonarqube-8
-rm -rf sonarqube-8.9.10.61524.zip```
+rm -rf sonarqube-8.9.10.61524.zip
+```
 
 **Create a SonarQube user and set permissions:**
 
-```useradd sonar
+```
+useradd sonar
 passwd sonar
-chown -R sonar:sonar sonarqube-8/```
+chown -R sonar:sonar sonarqube-8/
+```
 
 **Start SonarQube:**
 
-```cd sonarqube-8/bin/linux-x86-64/
-vim sonar.sh```
+```
+cd sonarqube-8/bin/linux-x86-64/
+vim sonar.sh
+```
 
 In the sonar.sh file, add **run as user 'sonar'**
 
-```./sonar.sh start
-./sonar.sh status```
+```
+./sonar.sh start
+./sonar.sh status
+```
