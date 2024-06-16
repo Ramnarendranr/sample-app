@@ -38,7 +38,7 @@ Use the following command to SSH into each instance:
 ssh -i /path/to/your-key.pem ec2-user@your-instance-public-ip
 ```
 
-### Configuring Jenkins Server
+## Configuring Jenkins Server
 
 ### Step 3: Install Jenkins and Maven on Jenkins Instance**
 
@@ -98,7 +98,7 @@ source ~/.bashrc
 mvn --version
 ```
 
-### Configuring SonarQube Server
+## Configuring SonarQube Server
 
 ### Step 4: Install SonarQube
 **SSH into the SonarQube instance and switch to the root user:**
@@ -144,3 +144,85 @@ In the sonar.sh file, add **run as user 'sonar'**
 ./sonar.sh start
 ./sonar.sh status
 ```
+
+
+## Installing Nexus on Nexus Server
+
+### Step 5: Install Nexus on Nexus Server
+
+**SSH into the Nexus instance and switch to the root user:**
+
+```
+sudo su
+```
+
+**Verify the Java installation:**
+
+```
+java -version
+```
+
+**Update the package lists:**
+
+```
+sudo apt update -y
+```
+
+**Install OpenJDK 8:**
+
+```
+sudo apt install openjdk-8-jre-headless -y
+```
+
+**Verify the Java installation again:**
+
+```
+java -version
+```
+
+**Navigate to the /opt/ directory and Download and extract the Nexus tarball:**
+
+```
+cd /opt/
+wget https://download.sonatype.com/nexus/3/nexus-3.69.0-02-java8-unix.tar.gz
+tar -xvzf nexus-3.69.0-02-java8-unix.tar.gz
+rm -rf nexus-3.69.0-02-java8-unix.tar.gz
+```
+
+**Create a Nexus user:**
+```
+useradd nexus
+```
+
+**Set a password for the Nexus user:**
+
+```
+passwd nexus
+```
+
+**Change the ownership of the Nexus and Sonatype work directories:**
+
+```
+chown -R nexus:nexus nexus-3.69.0-02/
+chown -R nexus:nexus sonatype-work/
+```
+
+**Edit the nexus.rc file to set the Nexus user:**
+```
+cd nexus-3.69.0-02/bin/
+vim nexus.rc
+```
+
+**In the nexus.rc file, add the following line:**
+
+```
+run_as_user="nexus"
+```
+
+**Start the Nexus service:**
+```
+./nexus start
+./nexus status
+```
+
+Now access it through <public-ip-of-nexus-instance>:8081
