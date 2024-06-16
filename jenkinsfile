@@ -1,0 +1,84 @@
+pipeline {
+    agent any
+
+    tools{
+        maven 'maven-3.9'
+    }
+
+    stages {
+        stage('Delete Previous Builds') {
+            steps {
+                echo '***********************************************************************************************'
+                echo '-----------------------------DELETING PREVIOUS BUILDS-----------------------------------------'
+                sh 'rm -rf /var/lib/jenkins/workspace/Build-and-park/*'
+                echo 'Previous builds deleted'
+            }
+        }
+        stage('Git checkout') {
+            steps {
+                echo '****************************************************************'
+                echo 'Checkout code started from Github'
+                checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/Ramnarendranr/sample-app.git']])
+                echo 'Checkout code done from Github'
+            }
+        }
+        stage('Build Maven App') {
+            steps {
+                echo '****************************************************************'
+                echo 'Starting Build Maven'
+                sh 'mvn clean install'
+                echo 'Maven build done'
+            }
+        }
+        stage('Generate sonarqube analysis') {
+            steps {
+                echo '****************************************************************'
+                echo 'Starting sonarqube analysis'
+                withSonarQubeEnv(installationName: 'sonarqube-8', credentialsId: 'Jenkins-sonar') {
+                    sh 'mvn sonar:sonar'
+                }
+                echo 'Sonarqube analysis done'
+            }
+        }
+        stage('Upload artifacts to nexus') {
+            steps {
+                echo '****************************************************************'
+                echo 'Uploading artifacts to nexus'
+                
+                nexusArtifactUploader artifacts: 
+                [
+                    [
+                        artifactId: 'hiring', 
+                        classifier: '', 
+                        file: 'target/hiring.war', 
+                        type: 'war'
+                        ]
+                ], 
+                credentialsId: 'Nexus-credentials', 
+                groupId: 'in.javahome', 
+                nexusUrl: '54.158.182.47:8081', 
+                nexusVersion: 'nexus3', 
+                protocol: 'http', 
+                repository: 'my-sample-app', 
+                version: '0.2-SNAPSHOT'
+                
+                echo 'Artifacts uploaded to nexus'
+            }
+        }
+        stage('Deploy to Tomcat') {
+            steps {
+                echo '****************************************************************'
+                echo 'Deploying the application to tomcat server'
+                sshagent(['tomcat-credentials']) {
+                    sh """
+                    scp -o StrictHostKeyChecking=no target/*.war ubuntu@3.94.211.128:/opt/tomcat-9/webapps
+                    ssh -o StrictHostKeyChecking=no ubuntu@3.94.211.128 /opt/tomcat-9/bin/shutdown.sh
+                    ssh -o StrictHostKeyChecking=no ubuntu@3.94.211.128 /opt/tomcat-9/bin/startup.sh	
+		          """
+                }
+                
+                echo 'Deployed to tomcat server'
+            }
+        }
+    }
+}
