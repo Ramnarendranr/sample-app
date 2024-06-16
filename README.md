@@ -1,4 +1,4 @@
-# Project Setup Documentation
+# Jenkins CI-CD Project Setup Documentation
 
 ## Table of Contents
 
@@ -8,9 +8,14 @@ Prerequisites
 Setting Up EC2 Instances
 Configuring Jenkins Server
 Configuring SonarQube Server
-Next Steps
-Introduction
+Installing Nexus on Nexus Server
+Install Tomcat on Tomcat Server
+Add Jenkinsfile (Pipeline Script)
+Build and test
 ```
+
+### Introduction
+
 
 This document provides a step-by-step guide for setting up a CI/CD pipeline using Jenkins, Nexus, Tomcat, and SonarQube. It includes creating EC2 instances, installing necessary software, and configuring the environment to build and deploy a Java web application from a Git repository.
 
