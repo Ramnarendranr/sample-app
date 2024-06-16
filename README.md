@@ -41,17 +41,16 @@ ssh -i /path/to/your-key.pem ec2-user@your-instance-public-ip
 ### Configuring Jenkins Server
 
 ### Step 3: Install Jenkins and Maven on Jenkins Instance**
-SSH into the Jenkins instance and switch to the root user:
-```
-sudo su
-```
+
+**SSH into the Jenkins instance and switch to the root user:**
+
+```sudo su```
 
 **Update the package lists:**
 
 ```sudo apt update -y```
 
 **Add the Jenkins repository and import the GPG key:**
-
 
 ```echo "deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] https://pkg.jenkins.io/debian-stable binary/" | sudo tee /etc/apt/sources.list.d/jenkins.list > /dev/null```
 
